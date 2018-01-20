@@ -24,7 +24,7 @@ body
    part is defined as anything that matches with raw or comment or section or partial or special or reference or buffer
 ---------------------------------------------------------------------------------------------------------------------------------------*/
 part
-  = raw / comment / section / partial / special / reference / buffer
+  = braces / raw / comment / section / partial / special / reference / buffer
 
 /*-------------------------------------------------------------------------------------------------------------------------------------
    section is defined as matching with with sec_tag_start followed by 0 or more white spaces plus a closing brace plus body
@@ -223,6 +223,9 @@ raw "raw"
 comment "comment"
   = "{!" c:(!"!}" c:. {return c})* "!}"
   { return withPosition(["comment", c.join('')]) }
+braces "braces"
+  = "{{" c:(!"}}" c:. {return c})* "}}"
+  { return withPosition(["comment", '{' + c.join('') + '}']) }
 
 /*-------------------------------------------------------------------------------------------------------------------------------------
    tag is defined as matching an opening brace plus any of #?^><+%:@/~% plus 0 or more whitespaces plus any character or characters that
